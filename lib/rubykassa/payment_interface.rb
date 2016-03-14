@@ -9,6 +9,7 @@ module Rubykassa
       login:       'MerchantLogin'.freeze,
       total:       'OutSum'.freeze,
       invoice_id:  'InvId'.freeze,
+      receipt:     'Receipt'.freeze,
       signature:   'SignatureValue'.freeze,
       email:       'Email'.freeze,
       currency:    'IncCurrLabel'.freeze,
@@ -17,7 +18,7 @@ module Rubykassa
       is_test:     'IsTest'.freeze
     }.freeze
 
-    attr_accessor :invoice_id, :total, :params
+    attr_accessor :invoice_id, :total, :receipt, :params
 
     def initialize(&block)
       instance_eval &block if block_given?
@@ -46,10 +47,11 @@ module Rubykassa
         login: Rubykassa.login,
         total: @total,
         invoice_id: @invoice_id,
+        receipt: @receipt || '',
         is_test: test_mode? ? 1 : 0,
         signature: generate_signature_for(:payment)
       }
-      custom_params = @params.sort.map { |param_name| param_name.first 2 }
+      custom_params = @params.sort.map { |param_name| param_name.first 3 }
       result.merge Hash[custom_params]
     end
 

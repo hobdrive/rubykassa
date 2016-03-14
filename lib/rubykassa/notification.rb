@@ -5,12 +5,13 @@ module Rubykassa
     include SignatureGenerator
 
     attr_accessor :params
-    attr_reader :invoice_id, :total
+    attr_reader :invoice_id, :total, :receipt
 
     def initialize(params = {})
       @params = HashWithIndifferentAccess.new(params)
       @invoice_id = @params['InvId']
       @total = @params['OutSum']
+      @receipt = @params['Receipt']
     end
 
     %w(result success).map do |kind|

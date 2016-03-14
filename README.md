@@ -38,13 +38,14 @@ Run `rails g rubykassa:install`, get an initializer with the following code:
       config.mode = :test # or :production
       config.http_method = :get # or :post
       config.xml_http_method = :get # or :post
+      config.hash_algorithm = :md5 # or :ripemd160, :sha1, :sha256, :sha384, :sha512
     end
 
 and configure it with your credentials. NB! Keep in mind that we are using environment variables. So do not forget to configure your `ENV`. For example using [figaro gem](https://github.com/laserlemon/figaro).
 
 Also, you need to specify Result URL, Success URL and Fail URL at the "Technical Settings" (Технические настройки) in your Robokassa dashboard:
 
-* Result URL: `http://<your_domain>/robokassa/paid`
+* Result URL: `http://<your_domain>/robokassa/result`
 * Success URL: `http://<your_domain>/robokassa/success`
 * Fail URL: `http://<your_domain>/robokassa/fail`
 
@@ -59,7 +60,7 @@ To define custom success/fail callbacks you can also use the initializer:
 
 Lambdas are called in RobokassaController so you can respond with [any kind that is supported by Rails](http://guides.rubyonrails.org/layouts_and_rendering.html#creating-responses).
 
-NOTE: `result_callback` should always return `"OK#{ invoice_id }"` string. So, implement your custom logic above `render text: notification.success` line.
+NOTE: `result_callback` should always return `"OK#{invoice_id}"` string. So, implement your custom logic above `render text: notification.success` line.
 
 IMPORTANT: Don't forget to restart web server after every change
 
@@ -112,7 +113,7 @@ See the CI build [![Build Status](https://secure.travis-ci.org/ZeroOneStudio/rub
 ## License
 
 This project rocks and uses MIT-LICENSE
-Copyright (c) 2013-2014 [Zero One][]
+Copyright (c) 2013-2016 [Zero One][]
 
 [ZERO.ONE]: http://www.zeroone.st
 
