@@ -20,7 +20,7 @@ module Rubykassa
                when :success
                  [@total, @invoice_id, Rubykassa.first_password, custom_params]
                end
-      result.flatten.join ':'
+      result.flatten.compact.join ':'
     end
 
     def custom_params

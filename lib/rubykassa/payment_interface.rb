@@ -33,6 +33,9 @@ module Rubykassa
       extra_params = extra_params.slice :currency, :description, :email,
                                         :culture
       result_params = initial_options.merge(extra_params).map do |key, value|
+        # we should do this! for Shp_ parameters that should be done twice (first time by API user!)
+        # for Receipt that also required to be done twice (although not very explicitly mentioned in API spec)
+        value = CGI.escape(value.to_s)
         if key =~ /^shp/
           "#{key}=#{value}"
         else
@@ -47,10 +50,11 @@ module Rubykassa
         login: Rubykassa.login,
         total: @total,
         invoice_id: @invoice_id,
-        receipt: @receipt || '',
-        is_test: test_mode? ? 1 : 0,
         signature: generate_signature_for(:payment)
       }
+      result[:receipt] = @receipt if @receipt
+      result[:is_test] = 1 if test_mode? 
+
       custom_params = @params.sort.map { |param_name| param_name.first 3 }
       result.merge Hash[custom_params]
     end

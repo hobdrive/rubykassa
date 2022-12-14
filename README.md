@@ -79,7 +79,57 @@ Or if you would like to pass some custom params use `custom` key in options hash
 
     <%= pay_url "Pay with Robokassa", ivoice_id, total_sum, { description: "Invoice description", email: "foo@bar.com", currency: "WMZM", culture: :ru, custom: { param1: "value1", param2: "value2" }} %>
 
-Also `pay_url` helper can accept block:
+**Notice!****** If you use Rubykassa::pay_url directly, custom array mapping is different, you should use
+
+    Rubykassa::pay_url ivoice_id, total_sum,
+    { param1: "value1", param2: "value2" },
+    { description: "Invoice description", email: "foo@bar.com", currency: "WMZM", culture: :ru }
+
+### Receipt handling
+
+Requirements are here: https://docs.robokassa.ru/fiscalization/
+
+Here is a default receipt JSON example:
+
+    {
+        "sno":"osn",
+        "items": [
+        {
+            "name": "Название товара 1",
+            "quantity": 1,
+            "sum": 100,
+            "payment_method": "full_payment",
+            "payment_object": "commodity",
+            "tax": "vat10"
+        },
+        {
+            "name": "Название товара 2",
+            "quantity": 3,
+            "sum": 450,
+            "payment_method": "full_prepayment",
+            "payment_object": "excise",
+            "nomenclature_code": "04620034587217"
+        }
+        ]
+    }
+
+receipt should be json URLencoded, and can be passed via extra params:
+
+    <%= pay_url "Pay with Robokassa", ivoice_id, total_sum,
+      { description: "Invoice description", email: "foo@bar.com", currency: "WMZM", culture: :ru, custom: { param1: "value1", param2: "value2",
+      receipt: URI.escape(your_receipt.to_json)
+    }} %>
+
+You can put default receipt creation:
+
+    <%= pay_url "Pay with Robokassa", ivoice_id, total_sum,
+      { description: "Invoice description", email: "foo@bar.com", currency: "WMZM", culture: :ru, custom: { param1: "value1", param2: "value2",
+      receipt: :default
+    }} %>
+
+**But be careful reviewing the type of report actually generated**
+
+### Also `pay_url` helper can accept block:
 
     <%= pay_url ivoice_id, total_sum do %>
       Pay with Robokassa
