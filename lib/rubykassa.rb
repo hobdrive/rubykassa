@@ -31,7 +31,7 @@ module Rubykassa
   end
 
   def def_receipt()
-    { # sno: "usn_income",
+    { sno: "usn_income",
       items: [
         {
           name: "",
