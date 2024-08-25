@@ -17,10 +17,10 @@ module Rubykassa
       self.http_method      = :get
       self.xml_http_method  = :get
       self.hash_algorithm   = :md5
-      self.success_callback = ->(notification) { render text: 'success' }
-      self.fail_callback    = ->(notification) { render text: 'fail' }
+      self.success_callback = ->(notification) { render plain: 'success' }
+      self.fail_callback    = ->(notification) { render plain: 'fail' }
       self.result_callback  = ->(notification) do
-        render text: notification.success
+        render plain: notification.success
       end
     end
 
